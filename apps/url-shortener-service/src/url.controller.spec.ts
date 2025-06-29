@@ -48,7 +48,7 @@ describe('UrlController', () => {
     expect(urlService).toBeDefined();
   });
 
-  describe('POST /url/shorten', () => {
+  describe('POST /shorten', () => {
     const originalUrl = 'https://example.com/long/url';
     const shortCode = 'abcDEF';
     const mockUrl: Url = {
@@ -68,7 +68,7 @@ describe('UrlController', () => {
       const createUrlDto: CreateUrlDto = { originalUrl };
 
       const response = await request(app.getHttpServer())
-        .post('/url/shorten')
+        .post('/shorten')
         .send(createUrlDto)
         .expect(201); // HTTP 201 Created
 
@@ -84,7 +84,7 @@ describe('UrlController', () => {
       const createUrlDto: CreateUrlDto = { originalUrl: '' }; // URL vazia
 
       await request(app.getHttpServer())
-        .post('/url/shorten')
+        .post('/shorten')
         .send(createUrlDto)
         .expect(400); // HTTP 400 Bad Request
     });
@@ -93,13 +93,13 @@ describe('UrlController', () => {
       const createUrlDto: CreateUrlDto = { originalUrl: 'not-a-valid-url' };
 
       await request(app.getHttpServer())
-        .post('/url/shorten')
+        .post('/shorten')
         .send(createUrlDto)
         .expect(400);
     });
   });
 
-  describe('GET /url/:shortCode', () => {
+  describe('GET /:shortCode', () => {
     const shortCode = 'abcDEF';
     const originalUrl = 'https://example.com/redirect';
     const mockUrl: Url = {
@@ -117,7 +117,7 @@ describe('UrlController', () => {
       mockUrlService.findByShortCode.mockResolvedValue(mockUrl);
 
       const response = await request(app.getHttpServer())
-        .get(`/url/${shortCode}`)
+        .get(`/${shortCode}`)
         .expect(302); // HTTP 302 Found (Redirecionamento)
 
       expect(mockUrlService.findByShortCode).toHaveBeenCalledWith(shortCode);
@@ -127,7 +127,7 @@ describe('UrlController', () => {
     it('should return 404 if short code is not found', async () => {
       mockUrlService.findByShortCode.mockResolvedValue(null);
 
-      await request(app.getHttpServer()).get(`/url/${shortCode}`).expect(404); // HTTP 404 Not Found
+      await request(app.getHttpServer()).get(`/${shortCode}`).expect(404); // HTTP 404 Not Found
     });
   });
 });
