@@ -4,6 +4,7 @@ import { UrlShortenerServiceController } from './url-shortener-service.controlle
 import { UrlShortenerServiceService } from './url-shortener-service.service';
 import { Url } from './entities/url.entity'; // CORRIGIDO: Caminho da entidade Url
 import { UrlModule } from './url.module'; // CORRIGIDO: Caminho do UrlModule (está no mesmo nível)
+import { TenantModule } from './tenant.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UrlModule } from './url.module'; // CORRIGIDO: Caminho do UrlModule (es
       synchronize: true,
     }),
     UrlModule,
+    TenantModule,
   ],
   controllers: [UrlShortenerServiceController],
   providers: [UrlShortenerServiceService],
