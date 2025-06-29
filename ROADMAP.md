@@ -1,7 +1,6 @@
 # 🗺️ Roadmap de Desenvolvimento: Sistema de Encurtamento de URLs
 
 Este documento detalha as fases e marcos do desenvolvimento do nosso sistema de encurtamento de URLs.
-Use as caixas de seleção `[ ]` para marcar o progresso de cada item.
 
 ---
 
