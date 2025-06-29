@@ -1,6 +1,7 @@
 # 🗺️ Roadmap de Desenvolvimento: Sistema de Encurtamento de URLs
 
-Este documento detalha as fases e marcos do desenvolvimento do sistema de encurtamento de URLs.
+Este documento detalha as fases e marcos do desenvolvimento do nosso sistema de encurtamento de URLs.
+Use as caixas de seleção `[ ]` para marcar o progresso de cada item.
 
 ---
 
@@ -29,6 +30,14 @@ Este documento detalha as fases e marcos do desenvolvimento do sistema de encurt
 
 ## 📈 **Fase 2: Contabilização e Autenticação (API)**
 *Foco: Adicionar métricas detalhadas e gerenciamento de usuários.*
+
+#### **Preparação para Multi-Tenancy** 🏢
+- [ ] Criar a entidade `Tenant`.
+- [ ] Adicionar `tenantId` à entidade `Url`.
+- [ ] Adicionar `tenantId` à entidade `ClickEvent`.
+- [ ] Atualizar o `UrlService` para lidar com o `tenantId` na criação e busca de URLs.
+- [ ] Atualizar o `UrlController` para usar o `tenantId` padrão.
+- [ ] Atualizar os testes do `UrlService` e `UrlController` para incluir `tenantId`.
 
 #### **Contabilização Detalhada de Cliques** 📊
 - [ ] Criação da entidade `ClickEvent` (urlId, clickedAt, ipAddress, userAgent - opcional).
