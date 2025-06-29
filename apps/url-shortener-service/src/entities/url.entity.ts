@@ -22,7 +22,7 @@ export class Url {
   clicks: number;
 
   @Column({ nullable: true })
-  userId: string;
+  userId: string | null;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -31,5 +31,5 @@ export class Url {
   updatedAt: Date;
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt: Date;
+  deletedAt: Date | null;
 }
