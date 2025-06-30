@@ -23,7 +23,7 @@ describe('UrlService', () => {
   const MOCK_URL_ID = 'some-uuid-url';
   const MOCK_TENANT_ID = '00000000-0000-0000-0000-000000000001'; // O mesmo do serviço
 
-  beforeEach(async ( ) => {
+  beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UrlService,
@@ -31,11 +31,11 @@ describe('UrlService', () => {
         {
           provide: getRepositoryToken(Url),
           useValue: {
-            create: jest.fn().mockImplementation(dto => dto),
+            create: jest.fn().mockImplementation((dto) => dto),
             save: jest
               .fn()
-              .mockImplementation((url) =>
-                Promise.resolve({ id: MOCK_URL_ID, ...url }),
+              .mockImplementation((url: Url) =>
+                Promise.resolve({ ...url, id: url.id || MOCK_URL_ID }),
               ),
             findOneBy: jest.fn(),
           },
@@ -234,7 +234,7 @@ describe('UrlService', () => {
         deletedAt: null,
       });
       expect(result).toBeDefined();
-      expect(result.clicks).toBe(6);
+      expect(result!.clicks).toBe(6);
 
       expect(urlRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
