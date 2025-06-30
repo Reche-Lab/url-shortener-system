@@ -16,6 +16,8 @@ describe('UrlController', () => {
     findByShortCode: jest.fn(),
   };
 
+  const DEFAULT_TENANT_ID = '00000000-0000-0000-0000-000000000001';
+
   beforeEach(async () => {
     jest.clearAllMocks();
 
@@ -58,6 +60,9 @@ describe('UrlController', () => {
       shortCode,
       clicks: 0,
       userId: null,
+      tenantId: DEFAULT_TENANT_ID,
+      tenant: null, // Mock para a relação, pode ser null ou um mock de Tenant
+      clickEvents: [], // Inicialmente vazio
       createdAt: new Date(),
       updatedAt: new Date(),
       deletedAt: null,
@@ -109,6 +114,9 @@ describe('UrlController', () => {
       shortCode,
       clicks: 0,
       userId: null,
+      tenantId: DEFAULT_TENANT_ID,
+      tenant: null,
+      clickEvents: [],
       createdAt: new Date(),
       updatedAt: new Date(),
       deletedAt: null,
