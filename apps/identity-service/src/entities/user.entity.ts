@@ -4,8 +4,6 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 
 @Entity('users')
@@ -22,12 +20,8 @@ export class User {
   @Column({ type: 'simple-array', default: 'user' })
   roles: string[];
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'varchar', default: 'default-tenant' })
   tenantId: string;
-
-  @ManyToOne('Tenant', { nullable: false })
-  @JoinColumn({ name: 'tenantId' })
-  tenant: any; // Usamos 'any' por enquanto, depois criaremos a entidade Tenant aqui
 
   @CreateDateColumn()
   createdAt: Date;

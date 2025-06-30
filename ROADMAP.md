@@ -49,9 +49,9 @@ Este documento detalha as fases e marcos do desenvolvimento do nosso sistema de 
 - [x] Definição da entidade `User` (email, password, roles, timestamps).
 - [x] Implementação de cadastro de usuário.
 - [x] Implementação de login (email/senha) e geração de `Bearer Token` (JWT).
-- [ ] Guards e Interceptors para proteção de rotas.
-- [ ] **TDD:** Testes unitários para `UserService`, `AuthService`, `AuthGuard`.
-- [ ] **Git Tag: `v0.3.0` (Autenticação)**
+- [x] Guards e Interceptors para proteção de rotas.
+- [x] **TDD:** Testes unitários para `UserService`, `AuthService`, `AuthGuard`.
+- [x] **Git Tag: `v0.3.0` (Autenticação)**
 
 ---
 
