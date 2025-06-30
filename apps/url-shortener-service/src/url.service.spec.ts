@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UrlService } from './url.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Url } from './entities/url.entity';
-import { Repository } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { ShortCodeService } from './short-code.service';
 import { ClickEvent } from './entities/click-event.entity';
 import { Tenant } from './entities/tenant.entity';
@@ -221,7 +221,7 @@ describe('UrlService', () => {
       expect(urlRepository.findOneBy).toHaveBeenCalledWith({
         shortCode: MOCK_SHORT_CODE,
         tenantId: MOCK_TENANT_ID,
-        deletedAt: null,
+        deletedAt: IsNull(),
       });
       expect(result).toBeDefined();
       expect(result!.clicks).toBe(6);
@@ -257,7 +257,7 @@ describe('UrlService', () => {
       expect(urlRepository.findOneBy).toHaveBeenCalledWith({
         shortCode: MOCK_SHORT_CODE,
         tenantId: MOCK_TENANT_ID,
-        deletedAt: null,
+        deletedAt: IsNull(),
       });
       expect(result).toBeNull();
       expect(urlRepository.save).not.toHaveBeenCalled();
