@@ -1,14 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/url-shortener-system/src",
-  "compilerOptions": {
-    "deleteOutDir": true,
-    "webpack": true,
-    "tsConfigPath": "apps/url-shortener-system/tsconfig.app.json"
-  },
   "monorepo": true,
-  "root": "apps/url-shortener-system",
+  "root": ".",
   "projects": {
     "identity-service": {
       "type": "application",
@@ -26,15 +20,6 @@
       "sourceRoot": "apps/url-shortener-service/src",
       "compilerOptions": {
         "tsConfigPath": "apps/url-shortener-service/tsconfig.app.json"
-      }
-    },
-    "url-shortener-system": {
-      "type": "application",
-      "root": "apps/url-shortener-system",
-      "entryFile": "main",
-      "sourceRoot": "apps/url-shortener-system/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/url-shortener-system/tsconfig.app.json"
       }
     }
   }

@@ -45,7 +45,6 @@ export class Url {
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date | null;
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   @OneToMany(() => ClickEvent, (clickEvent) => clickEvent.url)
   clickEvents: ClickEvent[];
 }

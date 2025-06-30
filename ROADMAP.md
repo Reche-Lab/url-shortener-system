@@ -42,10 +42,10 @@ Este documento detalha as fases e marcos do desenvolvimento do nosso sistema de 
 - [x] Criação da entidade `ClickEvent` (urlId, clickedAt, ipAddress, userAgent - opcional).
 - [x] Atualização do `UrlService.findByShortCode` para registrar `ClickEvent` e incrementar `Url.clicks`.
 - [x] **TDD:** Testes unitários para `ClickEvent` persistência e `UrlService` atualização de cliques.
-- [ ] **Git Tag: `v0.2.0` (Contabilização de Acessos)**
+- [x] **Git Tag: `v0.2.0` (Contabilização de Acessos)**
 
 #### **Sistema de Autenticação e Autorização** 🔐
-- [ ] Criação de um novo serviço: `identity-service` (NestJS).
+- [x] Criação de um novo serviço: `identity-service` (NestJS).
 - [ ] Definição da entidade `User` (email, password, roles, timestamps).
 - [ ] Implementação de cadastro de usuário.
 - [ ] Implementação de login (email/senha) e geração de `Bearer Token` (JWT).
