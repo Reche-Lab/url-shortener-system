@@ -4,7 +4,8 @@ import { UpdateTenantDto } from './dto/update-tenant.dto';
 
 @Injectable()
 export class TenantService {
-  create(createTenantDto: CreateTenantDto) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  create(_createTenantDto: CreateTenantDto) {
     return 'This action adds a new tenant';
   }
 
@@ -16,7 +17,8 @@ export class TenantService {
     return `This action returns a #${id} tenant`;
   }
 
-  update(id: number, updateTenantDto: UpdateTenantDto) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  update(id: number, _updateTenantDto: UpdateTenantDto) {
     return `This action updates a #${id} tenant`;
   }
 
