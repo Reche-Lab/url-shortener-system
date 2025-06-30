@@ -39,9 +39,9 @@ Este documento detalha as fases e marcos do desenvolvimento do nosso sistema de 
 - [x] Atualizar os testes do `UrlService` e `UrlController` para incluir `tenantId`.
 
 #### **Contabilização Detalhada de Cliques** 📊
-- [ ] Criação da entidade `ClickEvent` (urlId, clickedAt, ipAddress, userAgent - opcional).
-- [ ] Atualização do `UrlService.findByShortCode` para registrar `ClickEvent` e incrementar `Url.clicks`.
-- [ ] **TDD:** Testes unitários para `ClickEvent` persistência e `UrlService` atualização de cliques.
+- [x] Criação da entidade `ClickEvent` (urlId, clickedAt, ipAddress, userAgent - opcional).
+- [x] Atualização do `UrlService.findByShortCode` para registrar `ClickEvent` e incrementar `Url.clicks`.
+- [x] **TDD:** Testes unitários para `ClickEvent` persistência e `UrlService` atualização de cliques.
 - [ ] **Git Tag: `v0.2.0` (Contabilização de Acessos)**
 
 #### **Sistema de Autenticação e Autorização** 🔐
