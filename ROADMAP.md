@@ -36,7 +36,7 @@ Este documento detalha as fases e marcos do desenvolvimento do nosso sistema de 
 - [x] Adicionar `tenantId` à entidade `ClickEvent`.
 - [x] Atualizar o `UrlService` para lidar com o `tenantId` na criação e busca de URLs.
 - [x] Atualizar o `UrlController` para usar o `tenantId` padrão.
-- [ ] Atualizar os testes do `UrlService` e `UrlController` para incluir `tenantId`.
+- [x] Atualizar os testes do `UrlService` e `UrlController` para incluir `tenantId`.
 
 #### **Contabilização Detalhada de Cliques** 📊
 - [ ] Criação da entidade `ClickEvent` (urlId, clickedAt, ipAddress, userAgent - opcional).
