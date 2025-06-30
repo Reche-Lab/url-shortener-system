@@ -47,8 +47,8 @@ Este documento detalha as fases e marcos do desenvolvimento do nosso sistema de 
 #### **Sistema de Autenticação e Autorização** 🔐
 - [x] Criação de um novo serviço: `identity-service` (NestJS).
 - [x] Definição da entidade `User` (email, password, roles, timestamps).
-- [ ] Implementação de cadastro de usuário.
-- [ ] Implementação de login (email/senha) e geração de `Bearer Token` (JWT).
+- [x] Implementação de cadastro de usuário.
+- [x] Implementação de login (email/senha) e geração de `Bearer Token` (JWT).
 - [ ] Guards e Interceptors para proteção de rotas.
 - [ ] **TDD:** Testes unitários para `UserService`, `AuthService`, `AuthGuard`.
 - [ ] **Git Tag: `v0.3.0` (Autenticação)**
