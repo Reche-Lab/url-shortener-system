@@ -31,10 +31,10 @@ Este documento detalha as fases e marcos do desenvolvimento do nosso sistema de 
 *Foco: Adicionar métricas detalhadas e gerenciamento de usuários.*
 
 #### **Preparação para Multi-Tenancy** 🏢
-- [ ] Criar a entidade `Tenant`.
-- [ ] Adicionar `tenantId` à entidade `Url`.
-- [ ] Adicionar `tenantId` à entidade `ClickEvent`.
-- [ ] Atualizar o `UrlService` para lidar com o `tenantId` na criação e busca de URLs.
+- [x] Criar a entidade `Tenant`.
+- [x] Adicionar `tenantId` à entidade `Url`.
+- [x] Adicionar `tenantId` à entidade `ClickEvent`.
+- [x] Atualizar o `UrlService` para lidar com o `tenantId` na criação e busca de URLs.
 - [ ] Atualizar o `UrlController` para usar o `tenantId` padrão.
 - [ ] Atualizar os testes do `UrlService` e `UrlController` para incluir `tenantId`.
 
