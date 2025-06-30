@@ -30,10 +30,10 @@ export class ClickEvent {
   tenant: Tenant;
 
   @Column({ nullable: true })
-  ipAddress: string;
+  ipAddress: string | null;
 
   @Column({ type: 'text', nullable: true })
-  userAgent: string;
+  userAgent: string | null;
 
   @CreateDateColumn()
   clickedAt: Date;
