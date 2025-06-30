@@ -98,6 +98,7 @@ describe('UrlService', () => {
         shortCode: MOCK_SHORT_CODE,
         clicks: 0,
         userId: undefined,
+        tenantId: MOCK_TENANT_ID,
       });
       expect(urlRepository.save).toHaveBeenCalled();
       expect(result).toEqual(
@@ -124,9 +125,11 @@ describe('UrlService', () => {
       expect(shortCodeService.generateShortCode).toHaveBeenCalledTimes(2);
       expect(urlRepository.findOneBy).toHaveBeenCalledWith({
         shortCode: MOCK_SHORT_CODE,
+        tenantId: MOCK_TENANT_ID,
       });
       expect(urlRepository.findOneBy).toHaveBeenCalledWith({
         shortCode: 'anotherCode',
+        tenantId: MOCK_TENANT_ID,
       });
       expect(urlRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({ shortCode: 'anotherCode' }),
