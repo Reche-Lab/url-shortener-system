@@ -32,11 +32,13 @@ describe('UrlService', () => {
           provide: getRepositoryToken(Url),
           useValue: {
             create: jest.fn().mockImplementation((dto) => dto),
-            save: jest
-              .fn()
-              .mockImplementation((url: Url) =>
-                Promise.resolve({ ...url, id: url.id || MOCK_URL_ID }),
-              ),
+            save: jest.fn().mockImplementation((url: Url) => {
+              const savedUrl: Url = {
+                ...url,
+                id: url.id || MOCK_URL_ID,
+              } as Url;
+              return Promise.resolve(savedUrl);
+            }),
             findOneBy: jest.fn(),
           },
         },
@@ -44,11 +46,13 @@ describe('UrlService', () => {
           provide: getRepositoryToken(ClickEvent),
           useValue: {
             create: jest.fn().mockImplementation((dto) => dto),
-            save: jest
-              .fn()
-              .mockImplementation((event) =>
-                Promise.resolve({ id: 'some-uuid-click', ...event }),
-              ),
+            save: jest.fn().mockImplementation((event: ClickEvent) => {
+              const savedEvent: ClickEvent = {
+                ...event,
+                id: event.id || 'some-uuid-click',
+              } as ClickEvent;
+              return Promise.resolve(savedEvent);
+            }),
           },
         },
         {
