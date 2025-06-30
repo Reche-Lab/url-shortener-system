@@ -11,7 +11,9 @@ describe('UrlShortenerServiceController', () => {
       providers: [UrlShortenerServiceService],
     }).compile();
 
-    urlShortenerServiceController = app.get<UrlShortenerServiceController>(UrlShortenerServiceController);
+    urlShortenerServiceController = app.get<UrlShortenerServiceController>(
+      UrlShortenerServiceController,
+    );
   });
 
   describe('root', () => {
