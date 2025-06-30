@@ -6,14 +6,20 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Url } from './entities/url.entity';
 import { Repository } from 'typeorm';
 import { ShortCodeService } from './short-code.service';
+import { ClickEvent } from './entities/click-event.entity';
+import { Tenant } from './entities/tenant.entity';
 
 describe('UrlService', () => {
   let service: UrlService;
   let urlRepository: Repository<Url>;
+  let clickEventRepository: Repository<ClickEvent>;
+  let tenantRepository: Repository<Tenant>;
   let shortCodeService: ShortCodeService;
 
   const MOCK_SHORT_CODE = 'aBcDeF';
   const MOCK_ORIGINAL_URL = 'https://example.com/very/long/url';
+  const MOCK_URL_ID = 'some-uuid-url';
+  const MOCK_TENANT_ID = '00000000-0000-0000-0000-000000000001';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,9 +33,33 @@ describe('UrlService', () => {
             save: jest
               .fn()
               .mockImplementation((url) =>
-                Promise.resolve({ id: 'some-uuid', ...url }),
+                Promise.resolve({ id: MOCK_URL_ID, ...url }),
               ),
             findOneBy: jest.fn(),
+          },
+        },
+        {
+          provide: getRepositoryToken(ClickEvent), // CORRIGIDO: Usar getRepositoryToken
+          useValue: {
+            create: jest.fn().mockImplementation((dto) => dto),
+            save: jest
+              .fn()
+              .mockImplementation((event) =>
+                Promise.resolve({ id: 'some-uuid-click', ...event }),
+              ),
+          },
+        },
+        {
+          provide: getRepositoryToken(Tenant), // CORRIGIDO: Usar getRepositoryToken
+          useValue: {
+            findOneBy: jest.fn().mockResolvedValue({
+              id: MOCK_TENANT_ID,
+              name: 'Default Public Tenant',
+            }),
+            create: jest.fn().mockImplementation((dto) => dto),
+            save: jest
+              .fn()
+              .mockImplementation((tenant) => Promise.resolve(tenant)),
           },
         },
       ],
@@ -37,7 +67,17 @@ describe('UrlService', () => {
 
     service = module.get<UrlService>(UrlService);
     urlRepository = module.get<Repository<Url>>(getRepositoryToken(Url));
+    clickEventRepository = module.get<Repository<ClickEvent>>(
+      getRepositoryToken(ClickEvent),
+    );
+    tenantRepository = module.get<Repository<Tenant>>(
+      getRepositoryToken(Tenant),
+    );
     shortCodeService = module.get<ShortCodeService>(ShortCodeService);
+
+    jest
+      .spyOn(service as any, 'ensureDefaultTenantExists')
+      .mockResolvedValue(undefined);
   });
 
   it('should be defined', () => {
