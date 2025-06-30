@@ -45,6 +45,6 @@ export class Url {
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date | null;
 
-  @OneToMany(() => ClickEvent, clickEvent => clickEvent.url)
+  @OneToMany(() => ClickEvent, (clickEvent) => clickEvent.url)
   clickEvents: ClickEvent[];
 }

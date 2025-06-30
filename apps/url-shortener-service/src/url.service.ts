@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { Url } from './entities/url.entity';
 import { ShortCodeService } from './short-code.service';
 import { ClickEvent } from './entities/click-event.entity';
@@ -70,19 +70,18 @@ export class UrlService {
     const url = await this.urlsRepository.findOneBy({
       shortCode,
       tenantId: finalTenantId,
-      deletedAt: null,
+      deletedAt: IsNull(),
     });
 
     if (url) {
       url.clicks++;
       await this.urlsRepository.save(url);
 
-      const clickEvent = this.clickEventsRepository.create({
-        urlId: url.id,
-        tenantId: url.tenantId,
-        ipAddress: ipAddress || null,
-        userAgent: userAgent || null,
-      });
+      const clickEvent = new ClickEvent();
+      clickEvent.url = url;
+      clickEvent.tenantId = url.tenantId;
+      clickEvent.ipAddress = ipAddress || null;
+      clickEvent.userAgent = userAgent || null;
       await this.clickEventsRepository.save(clickEvent);
     }
 
