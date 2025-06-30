@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:16-alpine
-    restart: always
+  postgres:
+    image: postgres:15-alpine
+    container_name: url-shortener-db
     environment:
       POSTGRES_DB: url_shortener_db
       POSTGRES_USER: user
@@ -11,7 +11,57 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - url-shortener-network
+
+  identity-service:
+    build:
+      context: .
+      dockerfile: apps/identity-service/Dockerfile
+    container_name: identity-service
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=user
+      - DB_PASSWORD=password
+      - DB_DATABASE=url_shortener_db
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production-2024
+      - JWT_EXPIRES_IN=7d
+      - IDENTITY_SERVICE_PORT=3002
+    ports:
+      - "3002:3002"
+    depends_on:
+      - postgres
+    networks:
+      - url-shortener-network
+
+  url-shortener-service:
+    build:
+      context: .
+      dockerfile: apps/url-shortener-service/Dockerfile
+    container_name: url-shortener-service
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=user
+      - DB_PASSWORD=password
+      - DB_DATABASE=url_shortener_db
+      - URL_SHORTENER_PORT=3001
+      - IDENTITY_SERVICE_URL=http://identity-service:3002
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - identity-service
+    networks:
+      - url-shortener-network
 
 volumes:
-  db_data:
+  postgres_data:
+
+networks:
+  url-shortener-network:
+    driver: bridge
