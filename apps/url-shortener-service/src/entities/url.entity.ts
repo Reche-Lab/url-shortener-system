@@ -5,7 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { ClickEvent } from './click-event.entity';
+import { Tenant } from './tenant.entity';
 
 @Entity('urls')
 export class Url {
@@ -24,6 +29,13 @@ export class Url {
   @Column({ type: 'uuid', nullable: true })
   userId: string | null;
 
+  @Column({ type: 'uuid', nullable: true })
+  tenantId: string | null;
+
+  @ManyToOne(() => Tenant, (tenant) => tenant.urls)
+  @JoinColumn({ name: 'tenantId' })
+  tenant: Tenant;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -32,4 +44,7 @@ export class Url {
 
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date | null;
+
+  @OneToMany(() => ClickEvent, clickEvent => clickEvent.url)
+  clickEvents: ClickEvent[];
 }
