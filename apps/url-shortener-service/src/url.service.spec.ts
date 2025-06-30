@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Test, TestingModule } from '@nestjs/testing';
 import { UrlService } from './url.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -27,7 +27,7 @@ describe('UrlService', () => {
   const MOCK_SHORT_CODE = 'aBcDeF';
   const MOCK_ORIGINAL_URL = 'https://example.com/very/long/url';
   const MOCK_URL_ID = 'some-uuid-url';
-  const MOCK_TENANT_ID = '00000000-0000-0000-0000-000000000001'; // O mesmo do serviço
+  const MOCK_TENANT_ID = '00000000-0000-0000-0000-000000000001';
 
   // Defina os mocks aqui para que sejam acessíveis e redefiníveis
   const mockUrlRepository = {
@@ -37,7 +37,7 @@ describe('UrlService', () => {
   };
 
   const mockClickEventRepository = {
-    create: jest.fn().mockImplementation((dto) => dto),
+    create: jest.fn().mockImplementation((dto) => dto), // Mantenha esta linha
     save: createMockRepositorySave<ClickEvent>('some-uuid-click'),
   };
 
@@ -58,15 +58,15 @@ describe('UrlService', () => {
         ShortCodeService,
         {
           provide: getRepositoryToken(Url),
-          useValue: mockUrlRepository, // Use o mock definido acima
+          useValue: mockUrlRepository,
         },
         {
           provide: getRepositoryToken(ClickEvent),
-          useValue: mockClickEventRepository, // Use o mock definido acima
+          useValue: mockClickEventRepository,
         },
         {
           provide: getRepositoryToken(Tenant),
-          useValue: mockTenantRepository, // Use o mock definido acima
+          useValue: mockTenantRepository,
         },
       ],
     }).compile();
@@ -84,6 +84,15 @@ describe('UrlService', () => {
     jest
       .spyOn(service as any, 'ensureDefaultTenantExists')
       .mockResolvedValue(undefined);
+
+    jest.spyOn(clickEventRepository, 'create').mockImplementation(
+      (dto) =>
+        ({
+          id: 'mock-click-id',
+          clickedAt: new Date(),
+          ...dto,
+        }) as ClickEvent,
+    );
   });
 
   it('should be defined', () => {
@@ -98,16 +107,15 @@ describe('UrlService', () => {
 
       const result = await service.shortenUrl(MOCK_ORIGINAL_URL);
 
-      expect(service['ensureDefaultTenantExists']).toHaveBeenCalled(); // Verifica se o método auxiliar foi chamado
+      expect(service['ensureDefaultTenantExists']).toHaveBeenCalled();
       expect(mockUrlRepository.create).toHaveBeenCalledWith({
-        // Use mockUrlRepository
         originalUrl: MOCK_ORIGINAL_URL,
         shortCode: MOCK_SHORT_CODE,
         clicks: 0,
         userId: undefined,
-        tenantId: MOCK_TENANT_ID, // Verifica se o tenantId padrão foi atribuído
+        tenantId: MOCK_TENANT_ID,
       });
-      expect(mockUrlRepository.save).toHaveBeenCalled(); // Use mockUrlRepository
+      expect(mockUrlRepository.save).toHaveBeenCalled();
       expect(result).toEqual(
         expect.objectContaining({
           originalUrl: MOCK_ORIGINAL_URL,
@@ -132,8 +140,7 @@ describe('UrlService', () => {
       expect(service['ensureDefaultTenantExists']).toHaveBeenCalled();
       expect(mockUrlRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          // Use mockUrlRepository
-          tenantId: customTenantId, // Verifica se o tenantId personalizado foi atribuído
+          tenantId: customTenantId,
         }),
       );
       expect(result).toEqual(
@@ -149,25 +156,24 @@ describe('UrlService', () => {
         .mockReturnValueOnce(MOCK_SHORT_CODE)
         .mockReturnValueOnce('anotherCode');
 
-      // Simula colisão para o mesmo tenantId
       jest
-        .spyOn(mockUrlRepository, 'findOneBy') // Use mockUrlRepository
-        .mockResolvedValueOnce(new Url()) // Colisão
-        .mockResolvedValueOnce(null); // Sucesso
+        .spyOn(mockUrlRepository, 'findOneBy')
+        .mockResolvedValueOnce(new Url())
+        .mockResolvedValueOnce(null);
 
       const result = await service.shortenUrl(MOCK_ORIGINAL_URL);
 
       expect(mockUrlRepository.findOneBy).toHaveBeenCalledWith({
         shortCode: MOCK_SHORT_CODE,
         tenantId: MOCK_TENANT_ID,
-      }); // Use mockUrlRepository
+      });
       expect(mockUrlRepository.findOneBy).toHaveBeenCalledWith({
         shortCode: 'anotherCode',
         tenantId: MOCK_TENANT_ID,
-      }); // Use mockUrlRepository
+      });
       expect(mockUrlRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({ shortCode: 'anotherCode' }),
-      ); // Use mockUrlRepository
+      );
       expect(result).toEqual(
         expect.objectContaining({
           shortCode: 'anotherCode',
@@ -186,7 +192,6 @@ describe('UrlService', () => {
 
       expect(mockUrlRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          // Use mockUrlRepository
           userId: userId,
         }),
       );
@@ -216,8 +221,7 @@ describe('UrlService', () => {
     it('should find a URL by short code and tenantId, increment clicks, and record a click event', async () => {
       jest
         .spyOn(mockUrlRepository, 'findOneBy')
-        .mockResolvedValue(MOCK_URL_WITH_TENANT); // Use mockUrlRepository
-      // Os mocks de save já foram corrigidos no beforeEach
+        .mockResolvedValue(MOCK_URL_WITH_TENANT);
 
       const ipAddress = '192.168.1.1';
       const userAgent = 'Mozilla/5.0 (Test)';
@@ -233,32 +237,31 @@ describe('UrlService', () => {
         shortCode: MOCK_SHORT_CODE,
         tenantId: MOCK_TENANT_ID,
         deletedAt: IsNull(),
-      }); // Use mockUrlRepository
+      });
       expect(result).toBeDefined();
       expect(result!.clicks).toBe(6);
 
       expect(mockUrlRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
-          // Use mockUrlRepository
           id: MOCK_URL_ID,
           clicks: 6,
         }),
       );
 
+      // AQUI ESTÁ A MUDANÇA CRÍTICA: Use o mockClickEventRepository diretamente
       expect(mockClickEventRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          // Use mockClickEventRepository
           url: MOCK_URL_WITH_TENANT,
           tenantId: MOCK_TENANT_ID,
           ipAddress: ipAddress,
           userAgent: userAgent,
         }),
       );
-      expect(mockClickEventRepository.save).toHaveBeenCalled(); // Use mockClickEventRepository
+      expect(mockClickEventRepository.save).toHaveBeenCalled();
     });
 
     it('should return null if URL is not found for the given short code and tenantId', async () => {
-      jest.spyOn(mockUrlRepository, 'findOneBy').mockResolvedValue(null); // Use mockUrlRepository
+      jest.spyOn(mockUrlRepository, 'findOneBy').mockResolvedValue(null);
 
       const result = await service.findByShortCode(
         MOCK_SHORT_CODE,
@@ -271,11 +274,11 @@ describe('UrlService', () => {
         shortCode: MOCK_SHORT_CODE,
         tenantId: MOCK_TENANT_ID,
         deletedAt: IsNull(),
-      }); // Use mockUrlRepository
+      });
       expect(result).toBeNull();
-      expect(mockUrlRepository.save).not.toHaveBeenCalled(); // Use mockUrlRepository
-      expect(mockClickEventRepository.create).not.toHaveBeenCalled(); // Use mockClickEventRepository
-      expect(mockClickEventRepository.save).not.toHaveBeenCalled(); // Use mockClickEventRepository
+      expect(mockUrlRepository.save).not.toHaveBeenCalled();
+      expect(mockClickEventRepository.create).not.toHaveBeenCalled();
+      expect(mockClickEventRepository.save).not.toHaveBeenCalled();
     });
   });
 });

@@ -77,11 +77,13 @@ export class UrlService {
       url.clicks++;
       await this.urlsRepository.save(url);
 
-      const clickEvent = new ClickEvent();
-      clickEvent.url = url;
-      clickEvent.tenantId = url.tenantId;
-      clickEvent.ipAddress = ipAddress || null;
-      clickEvent.userAgent = userAgent || null;
+      const clickEvent = this.clickEventsRepository.create({
+        url,
+        urlId: url.id,
+        tenantId: url.tenantId,
+        ipAddress: ipAddress || null,
+        userAgent: userAgent || null,
+      });
       await this.clickEventsRepository.save(clickEvent);
     }
 
