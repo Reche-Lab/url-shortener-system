@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-// apps/url-shortener-service/src/url.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { UrlService } from './url.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -10,6 +9,13 @@ import { Repository } from 'typeorm';
 import { ShortCodeService } from './short-code.service';
 import { ClickEvent } from './entities/click-event.entity';
 import { Tenant } from './entities/tenant.entity';
+
+const createMockRepositorySave = <T extends { id: string }>(mockId: string) => {
+  return jest.fn().mockImplementation((entity: T) => {
+    const savedEntity: T = { ...entity, id: entity.id || mockId };
+    return Promise.resolve(savedEntity);
+  });
+};
 
 describe('UrlService', () => {
   let service: UrlService;
@@ -32,13 +38,8 @@ describe('UrlService', () => {
           provide: getRepositoryToken(Url),
           useValue: {
             create: jest.fn().mockImplementation((dto) => dto),
-            save: jest.fn().mockImplementation((url: Url) => {
-              const savedUrl: Url = {
-                ...url,
-                id: url.id || MOCK_URL_ID,
-              } as Url;
-              return Promise.resolve(savedUrl);
-            }),
+            // Usando a função auxiliar para o mock de save
+            save: createMockRepositorySave<Url>(MOCK_URL_ID),
             findOneBy: jest.fn(),
           },
         },
@@ -46,13 +47,8 @@ describe('UrlService', () => {
           provide: getRepositoryToken(ClickEvent),
           useValue: {
             create: jest.fn().mockImplementation((dto) => dto),
-            save: jest.fn().mockImplementation((event: ClickEvent) => {
-              const savedEvent: ClickEvent = {
-                ...event,
-                id: event.id || 'some-uuid-click',
-              } as ClickEvent;
-              return Promise.resolve(savedEvent);
-            }),
+            // Usando a função auxiliar para o mock de save
+            save: createMockRepositorySave<ClickEvent>('some-uuid-click'),
           },
         },
         {
@@ -63,9 +59,7 @@ describe('UrlService', () => {
               name: 'Default Public Tenant',
             }),
             create: jest.fn().mockImplementation((dto) => dto),
-            save: jest
-              .fn()
-              .mockImplementation((tenant) => Promise.resolve(tenant)),
+            save: createMockRepositorySave<Tenant>('some-uuid-tenant'), // Mock para save do Tenant também
           },
         },
       ],
@@ -81,7 +75,6 @@ describe('UrlService', () => {
     );
     shortCodeService = module.get<ShortCodeService>(ShortCodeService);
 
-    // Garanta que ensureDefaultTenantExists seja chamado e mockado
     jest
       .spyOn(service as any, 'ensureDefaultTenantExists')
       .mockResolvedValue(undefined);
@@ -99,13 +92,13 @@ describe('UrlService', () => {
 
       const result = await service.shortenUrl(MOCK_ORIGINAL_URL);
 
-      expect(service['ensureDefaultTenantExists']).toHaveBeenCalled(); // Verifica se o método auxiliar foi chamado
+      expect(service['ensureDefaultTenantExists']).toHaveBeenCalled();
       expect(urlRepository.create).toHaveBeenCalledWith({
         originalUrl: MOCK_ORIGINAL_URL,
         shortCode: MOCK_SHORT_CODE,
         clicks: 0,
         userId: undefined,
-        tenantId: MOCK_TENANT_ID, // Verifica se o tenantId padrão foi atribuído
+        tenantId: MOCK_TENANT_ID,
       });
       expect(urlRepository.save).toHaveBeenCalled();
       expect(result).toEqual(
@@ -132,7 +125,7 @@ describe('UrlService', () => {
       expect(service['ensureDefaultTenantExists']).toHaveBeenCalled();
       expect(urlRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          tenantId: customTenantId, // Verifica se o tenantId personalizado foi atribuído
+          tenantId: customTenantId,
         }),
       );
       expect(result).toEqual(
@@ -148,11 +141,10 @@ describe('UrlService', () => {
         .mockReturnValueOnce(MOCK_SHORT_CODE)
         .mockReturnValueOnce('anotherCode');
 
-      // Simula colisão para o mesmo tenantId
       jest
         .spyOn(urlRepository, 'findOneBy')
-        .mockResolvedValueOnce(new Url()) // Colisão
-        .mockResolvedValueOnce(null); // Sucesso
+        .mockResolvedValueOnce(new Url())
+        .mockResolvedValueOnce(null);
 
       const result = await service.shortenUrl(MOCK_ORIGINAL_URL);
 
@@ -203,24 +195,18 @@ describe('UrlService', () => {
       shortCode: MOCK_SHORT_CODE,
       clicks: 5,
       userId: null,
-      tenantId: MOCK_TENANT_ID, // URL com tenantId
+      tenantId: MOCK_TENANT_ID,
       createdAt: new Date(),
       updatedAt: new Date(),
       deletedAt: null,
       clickEvents: [],
-      tenant: null, // Mock para a relação
+      tenant: null,
     };
 
     it('should find a URL by short code and tenantId, increment clicks, and record a click event', async () => {
       jest
         .spyOn(urlRepository, 'findOneBy')
         .mockResolvedValue(MOCK_URL_WITH_TENANT);
-      jest
-        .spyOn(urlRepository, 'save')
-        .mockImplementation((url) => Promise.resolve(url));
-      jest
-        .spyOn(clickEventRepository, 'save')
-        .mockImplementation((event) => Promise.resolve(event)); // Mock para save do clickEvent
 
       const ipAddress = '192.168.1.1';
       const userAgent = 'Mozilla/5.0 (Test)';
@@ -247,10 +233,9 @@ describe('UrlService', () => {
         }),
       );
 
-      // Verifique a criação e salvamento do ClickEvent
       expect(clickEventRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: MOCK_URL_WITH_TENANT, // Passa a instância da URL
+          url: MOCK_URL_WITH_TENANT,
           tenantId: MOCK_TENANT_ID,
           ipAddress: ipAddress,
           userAgent: userAgent,
