@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
+// apps/url-shortener-service/src/url.controller.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { UrlController } from './url.controller';
 import { UrlService } from './url.service';
@@ -6,6 +7,7 @@ import { CreateUrlDto } from './dto/create-url.dto';
 import { Url } from './entities/url.entity';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
+import { Tenant } from './entities/tenant.entity';
 
 describe('UrlController', () => {
   let app: INestApplication;
@@ -61,11 +63,11 @@ describe('UrlController', () => {
       clicks: 0,
       userId: null,
       tenantId: DEFAULT_TENANT_ID,
-      tenant: null, // Mock para a relação, pode ser null ou um mock de Tenant
-      clickEvents: [], // Inicialmente vazio
+      tenant: null as unknown as Tenant,
       createdAt: new Date(),
       updatedAt: new Date(),
       deletedAt: null,
+      clickEvents: [],
     };
 
     it('should shorten a URL and return the short URL', async () => {
@@ -76,9 +78,14 @@ describe('UrlController', () => {
       const response = await request(app.getHttpServer())
         .post('/shorten')
         .send(createUrlDto)
-        .expect(201); // HTTP 201 Created
+        .expect(201);
 
-      expect(mockUrlService.shortenUrl).toHaveBeenCalledWith(originalUrl);
+      // CORRIGIDO: Adicionado undefined para userId e DEFAULT_TENANT_ID para tenantId
+      expect(mockUrlService.shortenUrl).toHaveBeenCalledWith(
+        originalUrl,
+        undefined, // userId
+        DEFAULT_TENANT_ID, // tenantId
+      );
 
       expect(response.body).toEqual({
         originalUrl: mockUrl.originalUrl,
@@ -87,12 +94,12 @@ describe('UrlController', () => {
     });
 
     it('should return 400 if originalUrl is missing', async () => {
-      const createUrlDto: CreateUrlDto = { originalUrl: '' }; // URL vazia
+      const createUrlDto: CreateUrlDto = { originalUrl: '' };
 
       await request(app.getHttpServer())
         .post('/shorten')
         .send(createUrlDto)
-        .expect(400); // HTTP 400 Bad Request
+        .expect(400);
     });
 
     it('should return 400 if originalUrl is not a valid URL format', async () => {
@@ -115,28 +122,37 @@ describe('UrlController', () => {
       clicks: 0,
       userId: null,
       tenantId: DEFAULT_TENANT_ID,
-      tenant: null,
-      clickEvents: [],
+      tenant: null as unknown as Tenant, // Explicitamente tipado como Tenant ou null
       createdAt: new Date(),
       updatedAt: new Date(),
       deletedAt: null,
+      clickEvents: [],
     };
 
     it('should redirect to the original URL and increment clicks', async () => {
       mockUrlService.findByShortCode.mockResolvedValue(mockUrl);
 
+      const ipAddress = '::ffff:127.0.0.1'; // IP local para testes
+      const userAgent = 'supertest';
+
       const response = await request(app.getHttpServer())
         .get(`/${shortCode}`)
-        .expect(302); // HTTP 302 Found (Redirecionamento)
+        .set('User-Agent', userAgent)
+        .expect(302);
 
-      expect(mockUrlService.findByShortCode).toHaveBeenCalledWith(shortCode);
+      expect(mockUrlService.findByShortCode).toHaveBeenCalledWith(
+        shortCode,
+        ipAddress,
+        userAgent,
+        DEFAULT_TENANT_ID, // tenantId
+      );
       expect(response.header.location).toBe(originalUrl);
     });
 
     it('should return 404 if short code is not found', async () => {
       mockUrlService.findByShortCode.mockResolvedValue(null);
 
-      await request(app.getHttpServer()).get(`/${shortCode}`).expect(404); // HTTP 404 Not Found
+      await request(app.getHttpServer()).get(`/${shortCode}`).expect(404);
     });
   });
 });
