@@ -10,6 +10,15 @@
   "monorepo": true,
   "root": "apps/url-shortener-system",
   "projects": {
+    "identity-service": {
+      "type": "application",
+      "root": "apps/identity-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/identity-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/identity-service/tsconfig.app.json"
+      }
+    },
     "url-shortener-service": {
       "type": "application",
       "root": "apps/url-shortener-service",
