@@ -88,9 +88,55 @@ Ambos os serviços são construídos com NestJS e se comunicam entre si. O banco
 
 ## 📋 Pré-requisitos
 
-- Node.js (v18+)
-- Docker e Docker Compose
-- Git
+Antes de iniciar, certifique-se de ter as seguintes ferramentas instaladas em seu sistema:
+
+### Requisitos Obrigatórios
+
+- **Node.js** `>=18.0.0` - [Download](https://nodejs.org/)
+- **npm** `>=8.0.0` (incluído com Node.js)
+- **Docker** `>=24.0.0` - [Download](https://www.docker.com/get-started)
+- **Docker Compose** `>=2.0.0` (incluído com Docker Desktop)
+- **Git** - [Download](https://git-scm.com/)
+
+### Verificação dos Pré-requisitos
+
+Execute os comandos abaixo para verificar se todas as dependências estão instaladas corretamente:
+
+```bash
+# Verificar Node.js
+node --version
+# Deve retornar v18.x.x ou superior
+
+# Verificar npm
+npm --version
+# Deve retornar 8.x.x ou superior
+
+# Verificar Docker
+docker --version
+# Deve retornar 24.x.x ou superior
+
+# Verificar Docker Compose
+docker compose version
+# Deve retornar 2.x.x ou superior
+
+# Verificar Git
+git --version
+# Deve retornar 2.x.x ou superior
+```
+
+### Recursos do Sistema
+
+**Mínimos:**
+- RAM: 4GB
+- Armazenamento: 2GB livres
+- CPU: 2 cores
+
+**Recomendados:**
+- RAM: 8GB ou mais
+- Armazenamento: 5GB livres
+- CPU: 4 cores ou mais
+
+---
 
 ## 🚀 Instalação
 
@@ -108,11 +154,18 @@ cp .env.example .env
 # Edite o arquivo .env conforme necessário
 ```
 
-3. **Inicie os serviços com Docker**
+3. **Instalar Dependências**
+
+```bash
+npm install
+```
+
+4. **Inicie os serviços com Docker**
 
 ```bash
 npm run docker:up
 ```
+
 
 Isso iniciará todos os serviços necessários:
 - PostgreSQL na porta 5432
@@ -300,6 +353,7 @@ npm test -- apps/url-shortener-service
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
 
----
 
+---
+---
 **Desenvolvido com ❤️ por Bruno Reche**
