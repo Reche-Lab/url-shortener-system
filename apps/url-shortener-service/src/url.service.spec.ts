@@ -252,7 +252,6 @@ describe('UrlService', () => {
       expect(mockClickEventRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
           url: MOCK_URL_WITH_TENANT,
-          tenantId: MOCK_TENANT_ID,
           ipAddress: ipAddress,
           userAgent: userAgent,
         }),
