@@ -31,7 +31,7 @@ export class UrlController {
     );
     return {
       originalUrl: newUrl.originalUrl,
-      shortUrl: `http://localhost:3000/${newUrl.shortCode}`,
+      shortUrl: `http://localhost:3001/${newUrl.shortCode}`,
     };
   }
 

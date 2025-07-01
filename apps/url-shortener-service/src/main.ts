@@ -11,6 +11,6 @@ async function bootstrap() {
       transform: true, // Transforma payloads em instâncias do DTO
     }),
   );
-  await app.listen(3000);
+  await app.listen(3001);
 }
 void bootstrap();
