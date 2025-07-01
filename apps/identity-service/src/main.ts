@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { IdentityServiceModule } from './identity-service.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AuthController } from './auth/auth.controller';
 
 async function bootstrap() {
   const app = await NestFactory.create(IdentityServiceModule);
