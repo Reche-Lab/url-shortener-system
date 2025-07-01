@@ -14,6 +14,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - url-shortener-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d url_shortener_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   identity-service:
     build:
@@ -21,7 +26,7 @@ services:
       dockerfile: apps/identity-service/Dockerfile
     container_name: identity-service
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - DB_HOST=postgres
       - DB_PORT=5432
       - DB_USERNAME=user
@@ -30,12 +35,16 @@ services:
       - JWT_SECRET=your-super-secret-jwt-key-change-in-production-2024
       - JWT_EXPIRES_IN=7d
       - IDENTITY_SERVICE_PORT=3002
+      - TYPEORM_SYNCHRONIZE=true
+      - TYPEORM_LOGGING=true
     ports:
       - "3002:3002"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - url-shortener-network
+    restart: unless-stopped
 
   url-shortener-service:
     build:
@@ -43,7 +52,7 @@ services:
       dockerfile: apps/url-shortener-service/Dockerfile
     container_name: url-shortener-service
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - DB_HOST=postgres
       - DB_PORT=5432
       - DB_USERNAME=user
@@ -51,13 +60,18 @@ services:
       - DB_DATABASE=url_shortener_db
       - URL_SHORTENER_PORT=3001
       - IDENTITY_SERVICE_URL=http://identity-service:3002
+      - TYPEORM_SYNCHRONIZE=true
+      - TYPEORM_LOGGING=true
     ports:
       - "3001:3001"
     depends_on:
-      - postgres
-      - identity-service
+      postgres:
+        condition: service_healthy
+      identity-service:
+        condition: service_started
     networks:
       - url-shortener-network
+    restart: unless-stopped
 
 volumes:
   postgres_data:
