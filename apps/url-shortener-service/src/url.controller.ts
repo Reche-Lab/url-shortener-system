@@ -20,7 +20,7 @@ export class UrlController {
 
   constructor(private readonly urlService: UrlService) {}
 
-  @Post('shorten')
+  @Post('api/shorten')
   @ApiOperation({ summary: 'Cria uma URL encurtada' })
   async shorten(@Body() createUrlDto: CreateUrlDto) {
     const userId = undefined;

@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { IdentityServiceModule } from './identity-service.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { AuthController } from './auth/auth.controller';
 
 async function bootstrap() {
   const app = await NestFactory.create(IdentityServiceModule);
@@ -24,11 +25,12 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api/docs', app, document);
 
   const port = process.env.IDENTITY_SERVICE_PORT || 3002;
   await app.listen(port);
 
   console.log(`Identity Service running on port ${port}`);
+  console.log(`Swagger docs at http://localhost:${port}/api/docs`);
 }
 void bootstrap();
