@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { IdentityServiceModule } from './identity-service.module';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(IdentityServiceModule);
-  // Global validation pipe
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -13,8 +14,17 @@ async function bootstrap() {
     }),
   );
 
-  // CORS para comunicação entre serviços
   app.enableCors();
+
+  const config = new DocumentBuilder()
+    .setTitle('Identity Service API')
+    .setDescription('Endpoints para autenticação e usuários')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   const port = process.env.IDENTITY_SERVICE_PORT || 3002;
   await app.listen(port);
