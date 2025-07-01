@@ -1,4 +1,3 @@
-// apps/url-shortener-service/src/url.controller.ts
 import {
   Controller,
   Get,
@@ -12,14 +11,17 @@ import {
 import { UrlService } from './url.service';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { Response } from 'express';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
+@ApiTags('URLs')
 @Controller()
 export class UrlController {
   private readonly DEFAULT_TENANT_ID = '00000000-0000-0000-0000-000000000001';
 
   constructor(private readonly urlService: UrlService) {}
 
-  @Post('shorten')
+  @Post('api/shorten')
+  @ApiOperation({ summary: 'Cria uma URL encurtada' })
   async shorten(@Body() createUrlDto: CreateUrlDto) {
     const userId = undefined;
     const tenantId = this.DEFAULT_TENANT_ID;
@@ -36,6 +38,7 @@ export class UrlController {
   }
 
   @Get(':shortCode')
+  @ApiOperation({ summary: 'Redireciona para a URL original' })
   async redirectToOriginalUrl(
     @Param('shortCode') shortCode: string,
     @Res() res: Response,
