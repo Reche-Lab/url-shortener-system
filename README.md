@@ -174,6 +174,24 @@ Isso iniciará todos os serviços necessários:
 
 ## 🖥 Uso
 
+
+### 📑 Documentação Swagger
+
+Ambos os serviços expõem uma interface Swagger para teste e exploração da API.
+
+| Serviço               | URL da Documentação |
+|-----------------------|---------------------|
+| URL Shortener Service | [http://localhost:3001/api/docs](http://localhost:3001/api/docs) |
+| Identity Service      | [http://localhost:3002/api/docs](http://localhost:3002/api/docs) |
+
+A interface Swagger permite:
+- Testar os endpoints diretamente no navegador.
+- Visualizar exemplos de payloads.
+- Conferir validações e descrições de cada rota.
+
+**Dica:** Mantenha as rotas públicas (`/:shortCode`) separadas das rotas de API para evitar conflitos.
+
+
 ### Autenticação
 
 ```bash
