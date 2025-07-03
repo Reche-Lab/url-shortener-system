@@ -53,7 +53,7 @@ describe('UrlController', () => {
     expect(urlService).toBeDefined();
   });
 
-  describe('POST /shorten', () => {
+  describe('POST /api/shorten', () => {
     const originalUrl = 'https://example.com/long/url';
     const shortCode = 'abcDEF';
     const mockUrl: Url = {
@@ -76,7 +76,7 @@ describe('UrlController', () => {
       const createUrlDto: CreateUrlDto = { originalUrl };
 
       const response = await request(app.getHttpServer())
-        .post('/shorten')
+        .post('/api/shorten')
         .send(createUrlDto)
         .expect(201);
 
@@ -89,7 +89,7 @@ describe('UrlController', () => {
 
       expect(response.body).toEqual({
         originalUrl: mockUrl.originalUrl,
-        shortUrl: `http://localhost:3000/${mockUrl.shortCode}`,
+        shortUrl: `http://localhost:3001/${mockUrl.shortCode}`,
       });
     });
 
@@ -97,7 +97,7 @@ describe('UrlController', () => {
       const createUrlDto: CreateUrlDto = { originalUrl: '' };
 
       await request(app.getHttpServer())
-        .post('/shorten')
+        .post('/api/shorten')
         .send(createUrlDto)
         .expect(400);
     });
@@ -106,7 +106,7 @@ describe('UrlController', () => {
       const createUrlDto: CreateUrlDto = { originalUrl: 'not-a-valid-url' };
 
       await request(app.getHttpServer())
-        .post('/shorten')
+        .post('/api/shorten')
         .send(createUrlDto)
         .expect(400);
     });
