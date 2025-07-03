@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UrlShortenerServiceController } from './url-shortener-service.controller';
-import { UrlShortenerServiceService } from './url-shortener-service.service';
 import { UrlModule } from './url.module';
 import { Url } from './entities/url.entity';
 import { ClickEvent } from './entities/click-event.entity';
@@ -27,7 +25,7 @@ import { TenantModule } from './tenant.module';
     UrlModule,
     TenantModule,
   ],
-  controllers: [UrlShortenerServiceController],
-  providers: [UrlShortenerServiceService],
+  controllers: [],
+  providers: [],
 })
 export class UrlShortenerServiceModule {}
